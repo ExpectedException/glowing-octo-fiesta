@@ -10,8 +10,8 @@
 все студенты из первого файла были записаны во второй или если пользователь ввел с клавиатуры -1
 =end
 require 'fileutils'
-SRC = 'C:\Users\PussyDestroyer\Documents\GitHub\glowing-octo-fiesta\LR3\Temp.txt'
-DEST = 'C:\Users\PussyDestroyer\Documents\GitHub\glowing-octo-fiesta\LR3\input.txt'
+SRC = 'Temp.txt'
+DEST = 'input.txt'
 
 def openReadDelete(age)
   File.foreach('input.txt') { |line| checkForConformity(age, line) }
