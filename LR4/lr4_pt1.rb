@@ -11,7 +11,7 @@ DefBalance = 100.0
 class CashMachine
 
   def self.init
-    CashMachine.new.chose_option
+    CashMachine.new.choose_option
   end
 
   def readBalance
@@ -29,11 +29,11 @@ class CashMachine
     if File.exist?('balance.txt')
       balance = File.read('balance.txt').chomp
       puts "Your current balance: #{balance}"
-      chose_option
+      choose_option
     else
       balance = DefBalance
       puts "Your current balance: #{balance}"
-      chose_option
+      choose_option
     end
   end
 
@@ -49,7 +49,7 @@ class CashMachine
       puts 'Input must be a positive number'
       deposit
     end
-    chose_option
+    choose_option
   end
 
   def withdraw
@@ -64,10 +64,10 @@ class CashMachine
       puts 'Input must be a positive number'
       withdraw
     end
-    chose_option
+    choose_option
   end
 
-  def chose_option
+  def choose_option
     puts 'D(deposit), W(withdraw), B(balance), Q (quit)'
     key = STDIN.getch.upcase!.chomp.to_s
     puts key
@@ -82,7 +82,7 @@ class CashMachine
       puts 'Exiting...'
       exit
     else
-      chose_option
+      choose_option
     end
   end
 end

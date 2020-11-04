@@ -41,11 +41,11 @@ def balance
   if File.exist?('balance.txt')
     balance = File.read('balance.txt').chomp
     puts "Your current balance: #{balance}"
-    chose_option
+    choose_option
   else
     balance = DefBalance
     puts "Your current balance: #{balance}"
-    chose_option
+    choose_option
   end
 end
 
@@ -61,7 +61,7 @@ def deposit
     puts 'Input must be a positive number'
     deposit
   end
-  chose_option
+  choose_option
 end
 
 def withdraw
@@ -76,10 +76,10 @@ def withdraw
     puts 'Input must be a positive number'
     withdraw
   end
-  chose_option
+  choose_option
 end
 # wtd lambda
-def chose_option
+def choose_option
   puts 'D(deposit), W(withdraw), B(balance), Q (quit)'
   key = STDIN.getch.upcase!.chomp.to_s
   puts key
@@ -94,7 +94,7 @@ def chose_option
     puts 'Exiting...'
     exit
   else
-    chose_option
+    choose_option
   end
 end
-chose_option
+choose_option
