@@ -40,7 +40,7 @@ module Resource
 
     loop do
       print 'Choose verb to interact with resources (GET/POST/PUT/DELETE) / q to exit: '
-      verb = gets.chomp
+      verb = gets.chomp.upcase!
       break if verb == 'q'
 
       if verb != "GET" and verb != "POST" and verb != "PUT" and verb != "DELETE" and verb != "q" then
@@ -52,7 +52,7 @@ module Resource
 
       if verb == 'GET'
         print 'Choose action (index/show) / q to exit: '
-        action = gets.chomp
+        action = gets.chomp.downcase!
         break if action == 'q'
       end
 
@@ -69,18 +69,16 @@ class PostsController
   end
 
   def index
-    for i in 0..(@posts.size-1)
+    (0..(@posts.size - 1)).each { |i|
       puts i.to_s + " " + @posts[i].content
-    end
+    }
   end
 
   def show
     print 'Choose index of post: '
     index = gets.chomp
-    if self.index_validate(index, @posts) == -1 then return end
     puts @posts[index.to_i].content
   end
-
 
   def create
     puts "Enter your post's content:"
@@ -91,7 +89,6 @@ class PostsController
   def update
     print 'Choose index of post: '
     index = gets.chomp
-    if self.index_validate(index, @posts) == -1 then return end
     puts "Rewrite your post's content:"
     content = gets.chomp
     @posts[index.to_i].content = content
@@ -100,11 +97,67 @@ class PostsController
   def destroy
     print 'Choose index of post: '
     index = gets.chomp
-    if self.index_validate(index, @posts) == -1 then return end
     @posts.delete_at(index.to_i)
   end
 
 end
+
+#Controller for comments
+class CommentsController
+  extend Resource
+
+  def initialize(posts)
+    @posts = posts
+  end
+
+  def index
+    (0..(@posts.size - 1)).each { |i|
+      puts "post index: #{i}"
+      puts "post content:\n" + @posts[i].content
+      puts "comments: "
+      (0..(@posts[i].comments.size - 1)).each { |j|
+        puts j.to_s + " " + @posts[i].comments[j]
+      }
+    }
+  end
+
+  def show
+    print 'Choose index of post: '
+    post_index = gets.chomp
+    print 'Choose index of comment: '
+    comment_index = gets.chomp
+    puts @posts[post_index.to_i].comments[comment_index.to_i]
+
+  end
+
+  def create
+    print "Choose index of the post for which you are writing a comment: "
+    index = gets.chomp
+    puts "Enter your comment:"
+    comment = gets.chomp
+    @posts[index.to_i].comments.push(comment)
+  end
+
+  def update
+    print 'Choose index of post: '
+    post_index = gets.chomp
+    print 'Choose index of comment: '
+    comment_index = gets.chomp
+    puts "Rewrite comment:"
+    comment = gets.chomp
+    @posts[post_index.to_i].comments[comment_index.to_i] = comment
+
+  end
+
+  def destroy
+    print 'Choose index of post: '
+    post_index = gets.chomp
+    print 'Choose index of comment: '
+    comment_index = gets.chomp
+    @posts[post_index.to_i].comments.delete_at(comment_index.to_i)
+  end
+end
+
 
 class Router
   def initialize
@@ -143,8 +196,6 @@ class Router
     }
 
   end
-end
-
 end
 
 router = Router.new
