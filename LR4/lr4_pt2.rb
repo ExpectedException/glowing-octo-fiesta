@@ -40,23 +40,28 @@ module Resource
 
     loop do
       print 'Choose verb to interact with resources (GET/POST/PUT/DELETE) / q to exit: '
-      verb = gets.chomp.upcase!
+      verb = gets.chomp.downcase
+      puts verb.inspect
       break if verb == 'q'
 
-      if verb != "GET" and verb != "POST" and verb != "PUT" and verb != "DELETE" and verb != "q" then
+      if verb != "get" and verb != "post" and verb != "put" and verb != "delete" and verb != "q" then
         puts "Exception: wrong argument"
         next
       end
 
       action = nil
 
-      if verb == 'GET'
+      if verb == 'get'
         print 'Choose action (index/show) / q to exit: '
-        action = gets.chomp.downcase!
+        action = gets.chomp.downcase
         break if action == 'q'
       end
 
-      action.nil? ? routes[verb].call : routes[verb][action].call
+      if action.nil?
+        routes[verb].call
+      else
+        routes[verb][action].call
+      end
     end
   end
 end
@@ -70,14 +75,14 @@ class PostsController
 
   def index
     (0..(@posts.size - 1)).each { |i|
-      puts i.to_s + " " + @posts[i].content
+      puts i.to_s + " " + @posts[i]
     }
   end
 
   def show
     print 'Choose index of post: '
     index = gets.chomp
-    puts @posts[index.to_i].content
+    puts @posts[index.to_i]
   end
 
   def create
@@ -91,7 +96,7 @@ class PostsController
     index = gets.chomp
     puts "Rewrite your post's content:"
     content = gets.chomp
-    @posts[index.to_i].content = content
+    @posts[index.to_i] = content
   end
 
   def destroy
@@ -106,8 +111,8 @@ end
 class CommentsController
   extend Resource
 
-  def initialize(posts)
-    @posts = posts
+  def initialize(comments)
+    @comments = comments
   end
 
   def index
@@ -135,7 +140,7 @@ class CommentsController
     index = gets.chomp
     puts "Enter your comment:"
     comment = gets.chomp
-    @posts[index.to_i].comments.push(comment)
+    @posts[index.to_i].push(comment)
   end
 
   def update
@@ -145,7 +150,7 @@ class CommentsController
     comment_index = gets.chomp
     puts "Rewrite comment:"
     comment = gets.chomp
-    @posts[post_index.to_i].comments[comment_index.to_i] = comment
+    @posts[post_index.to_i]= comment
 
   end
 
@@ -167,9 +172,10 @@ class Router
   def init
 
     posts = []
+    comments = []
 
     resources(PostsController, 'posts', posts)
-    resources(CommentsController,'comments', posts)
+    resources(CommentsController,'comments', comments)
 
     loop do
       print 'Choose resource you want to interact (1 - Posts, 2 - Comments, q - Exit): '
@@ -186,13 +192,13 @@ class Router
   def resources(klass, keyword, posts_arr)
     controller = klass.new(posts_arr)
     @routes[keyword] = {
-            'GET' => {
+            'get' => {
                     'index' => controller.method(:index),
                     'show' => controller.method(:show)
             },
-            'POST' => controller.method(:create),
-            'PUT' => controller.method(:update),
-            'DELETE' => controller.method(:destroy)
+            'post' => controller.method(:create),
+            'put' => controller.method(:update),
+            'delete' => controller.method(:destroy)
     }
 
   end
